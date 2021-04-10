@@ -1,15 +1,19 @@
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class BonusServiceTest {
 
-    @org.junit.jupiter.api.Test
-    void schouldCalculateRegistredAndUnderLimit() {
+    @ParameterizedTest
+    @CsvSource(value = {
+            "'registered user, bonus under limit',100060,true,30",
+            "'registered user, bonus over limit',100000060,true,500",
+            "'unregistered user, bonus over limit',100060,false,10",
+            "'unregistered user, bonus over limit',100000060,false,500"
+    }, delimiter = ',')
+    void schouldCalculateRegistredAndUnderLimit(String testName, long amount, boolean registered, long expected) {
         BonusService service = new BonusService();
-
-        long amount = 100060;
-        boolean registered = true;
-        long expected = 30;
-
 
         long actual = service.calculate(amount, registered);
 
